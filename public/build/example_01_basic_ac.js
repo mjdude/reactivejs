@@ -9826,6 +9826,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var $title = (0, _jquery2.default)('#title');
 var $results = (0, _jquery2.default)('#results');
 
+$title.on("keyup", function (e) {
+    var title = e.target.value;
+    getItems(title).then(function (items) {
+        console.log('items is ', items);
+        $results.empty();
+        var $items = items.map(function (item) {
+            return (0, _jquery2.default)('<li />').text(item);
+        });
+
+        console.log('items is ', $items);
+        $results.append($items);
+    });
+});
+
 // ----
 // Library
 
