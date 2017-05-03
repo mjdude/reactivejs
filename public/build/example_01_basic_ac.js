@@ -9826,8 +9826,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var $title = (0, _jquery2.default)('#title');
 var $results = (0, _jquery2.default)('#results');
 
+var lastQuery = null;
 $title.on("keyup", function (e) {
     var title = e.target.value;
+
+    if (title === lastQuery) {
+        return;
+    }
+
+    lastQuery = title;
+
     getItems(title).then(function (items) {
         console.log('items is ', items);
         $results.empty();

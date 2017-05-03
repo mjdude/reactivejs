@@ -3,8 +3,16 @@ import $ from 'jquery';
 const $title = $('#title');
 const $results = $('#results');
 
+let lastQuery = null;
 $title.on("keyup", e => {
     const title = e.target.value;
+
+    if(title === lastQuery){
+        return
+    }
+
+    lastQuery = title;
+    
     getItems(title)
         .then((items) => {
             console.log('items is ', items)
