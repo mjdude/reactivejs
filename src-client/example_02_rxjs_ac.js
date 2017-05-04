@@ -9,7 +9,7 @@ const queries$ = keyUps$
                     .map( e => e.target.value)
                     .distinctUntilChanged()
                     .debounceTime(250)
-                    .mergeMap(query => getItems(query));
+                    .switchMap(query => getItems(query));
 
 queries$.subscribe(items => {
         $results.empty();
