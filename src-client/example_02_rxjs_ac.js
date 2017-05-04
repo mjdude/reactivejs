@@ -8,20 +8,17 @@ const keyUps$ = Rx.Observable.fromEvent($title, "keyup");
 const queries$ = keyUps$
                     .map( e => e.target.value)
                     .distinctUntilChanged()
-                    .debounceTime(250);
+                    .debounceTime(250)
+                    .mergeMap(query => getItems(query));
 
-queries$.subscribe(query => {
-    getItems(query).then((items) => {
+queries$.subscribe(items => {
         $results.empty();
-        const $items = items.map((item) => $(`<li >`).text(item))
-        $results.append($items);
-    })
+        $results.append( items.map(x => $(`<li />`).text(x)));
 })
 // ----
 // Library
 
 const getItems = (title) => {
-    console.log(`Querying ${title}`)
     return new Promise((resolve, reject) => {
         window.setTimeout(() => {
             resolve([title, "Item 2", `Another ${Math.random()}`])

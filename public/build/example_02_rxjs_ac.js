@@ -27560,22 +27560,20 @@ var $results = (0, _jquery2.default)('#results');
 var keyUps$ = _Rx2.default.Observable.fromEvent($title, "keyup");
 var queries$ = keyUps$.map(function (e) {
     return e.target.value;
-}).distinctUntilChanged().debounceTime(250);
+}).distinctUntilChanged().debounceTime(250).mergeMap(function (query) {
+    return getItems(query);
+});
 
-queries$.subscribe(function (query) {
-    getItems(query).then(function (items) {
-        $results.empty();
-        var $items = items.map(function (item) {
-            return (0, _jquery2.default)('<li >').text(item);
-        });
-        $results.append($items);
-    });
+queries$.subscribe(function (items) {
+    $results.empty();
+    $results.append(items.map(function (x) {
+        return (0, _jquery2.default)('<li />').text(x);
+    }));
 });
 // ----
 // Library
 
 var getItems = function getItems(title) {
-    console.log('Querying ' + title);
     return new Promise(function (resolve, reject) {
         window.setTimeout(function () {
             resolve([title, "Item 2", 'Another ' + Math.random()]);
