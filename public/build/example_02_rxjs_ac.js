@@ -27557,19 +27557,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var $title = (0, _jquery2.default)('#title');
 var $results = (0, _jquery2.default)('#results');
 
-var keyUps$ = _Rx2.default.Observable.fromEvent($title, "keyup");
-var queries$ = keyUps$.map(function (e) {
+_Rx2.default.Observable.fromEvent($title, "keyup").map(function (e) {
     return e.target.value;
-}).distinctUntilChanged().debounceTime(250).switchMap(function (query) {
+}).distinctUntilChanged().debounceTime(500).switchMap(function (query) {
     return getItems(query);
-});
-
-queries$.subscribe(function (items) {
+}).subscribe(function (items) {
     $results.empty();
-    $results.append(items.map(function (x) {
-        return (0, _jquery2.default)('<li />').text(x);
+    $results.append(items.map(function (item) {
+        return (0, _jquery2.default)('<li />').text(item);
     }));
 });
+
+// const keyUps$ = Rx.Observable.fromEvent($title, "keyup");
+// const queries$ = keyUps$
+//                     .map( e => e.target.value)
+//                     .distinctUntilChanged()
+//                     .debounceTime(250)
+//                     .switchMap(query => getItems(query));
+
+// queries$.subscribe(items => {
+//         $results.empty();
+//         $results.append( items.map(x => $(`<li />`).text(x)));
+// })
 // ----
 // Library
 
