@@ -64,12 +64,21 @@ function createSubscriber(tag){
 function createInterval$(time){
     return new Rx.Observable(observer => {
         let index = 0;
-        setInterval(() => {
+        let interval = setInterval(() => {
+            console.log(`Generating ${index}`)
             observer.next(index++)
         }, time)
+
+        return () => {
+            clearInterval(interval);
+        }
     })
 }
 
 
 const everySecond$ = createInterval$(1000);
-everySecond$.subscribe(createSubscriber("one"));
+const subscribtion = everySecond$.subscribe(createSubscriber("one"));
+
+setTimeout(() => {
+    subscribtion.unsubscribe()
+}, 3500);
