@@ -1,8 +1,10 @@
-"use strict";
+'use strict';
 
-var _Rx = require("rxjs/Rx");
+var _Rx = require('rxjs/Rx');
 
 var _Rx2 = _interopRequireDefault(_Rx);
+
+var _util = require('./lib/util');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -59,25 +61,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // ---- PART 2 ----
 
-function createSubscriber(tag) {
-    return {
-        next: function next(item) {
-            console.log(tag + ".next " + item);
-        },
-        error: function error(_error) {
-            console.log(tag + ".error " + (_error.stack || _error));
-        },
-        complete: function complete() {
-            console.log(tag + ".complete");
-        }
-    };
-}
+// function createSubscriber(tag){
+//     return {
+//         next(item) {console.log(`${tag}.next ${item}`)},
+//         error(error) {console.log(`${tag}.error ${error.stack || error}`)},
+//         complete() {console.log(`${tag}.complete`)}
+//     }
+// }
+
 
 function createInterval$(time) {
     return new _Rx2.default.Observable(function (observer) {
         var index = 0;
         var interval = setInterval(function () {
-            console.log("Generating " + index);
+            console.log('Generating ' + index);
             observer.next(index++);
         }, time);
 
@@ -95,8 +92,8 @@ function take$(souceObservable$, amount) {
                 observer.next(item);
                 if (++count >= amount) observer.complete();
             },
-            error: function error(_error2) {
-                observer.error(_error2);
+            error: function error(_error) {
+                observer.error(_error);
             },
             complete: function complete() {
                 observer.complete();
@@ -110,7 +107,7 @@ function take$(souceObservable$, amount) {
 }
 var everySecond$ = createInterval$(1000);
 var firstFiveSeconds$ = take$(everySecond$, 5);
-var subscribtion = firstFiveSeconds$.subscribe(createSubscriber("one"));
+var subscribtion = firstFiveSeconds$.subscribe((0, _util.createSubscriber)("one"));
 
 // setTimeout(() => {
 //     subscribtion.unsubscribe()
