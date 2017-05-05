@@ -87,9 +87,31 @@ function createInterval$(time) {
     });
 }
 
-var everySecond$ = createInterval$(1000);
-var subscribtion = everySecond$.subscribe(createSubscriber("one"));
+function take$(souceObservable$, amount) {
+    return new _Rx2.default.Observable(function (observer) {
+        var count = 0;
+        var subscribtion = souceObservable$.subscribe({
+            next: function next(item) {
+                observer.next(item);
+                if (++count >= amount) observer.complete();
+            },
+            error: function error(_error2) {
+                observer.error(_error2);
+            },
+            complete: function complete() {
+                observer.complete();
+            }
+        });
 
-setTimeout(function () {
-    subscribtion.unsubscribe();
-}, 3500);
+        return function () {
+            return subscribtion.unsubscribe();
+        };
+    });
+}
+var everySecond$ = createInterval$(1000);
+var firstFiveSeconds$ = take$(everySecond$, 5);
+var subscribtion = firstFiveSeconds$.subscribe(createSubscriber("one"));
+
+// setTimeout(() => {
+//     subscribtion.unsubscribe()
+// }, 3500);

@@ -76,9 +76,30 @@ function createInterval$(time){
 }
 
 
-const everySecond$ = createInterval$(1000);
-const subscribtion = everySecond$.subscribe(createSubscriber("one"));
+function take$(souceObservable$, amount){
+    return new Rx.Observable(observer => {
+        let count = 0;
+        const subscribtion= souceObservable$.subscribe({
+            next(item){
+                observer.next(item);
+                if(++count >= amount)
+                    observer.complete()
+            },
+            error(error){
+                observer.error(error);
+            },
+            complete(){ observer.complete()}
+        })
 
-setTimeout(() => {
-    subscribtion.unsubscribe()
-}, 3500);
+        return () => subscribtion.unsubscribe();
+})
+
+    
+}
+const everySecond$ = createInterval$(1000);
+const firstFiveSeconds$ = take$(everySecond$, 5);
+const subscribtion = firstFiveSeconds$.subscribe(createSubscriber("one"));
+
+// setTimeout(() => {
+//     subscribtion.unsubscribe()
+// }, 3500);
